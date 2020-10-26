@@ -1,0 +1,63 @@
+<resources>
+    <!-- Base -->
+    <string name="app_name">Res2Rant Manage</string>
+    <string name="edit">Edit</string>
+    <string name="filer">Filter</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="error_default">Something went wrong!</string>
+
+    <!-- Account -->
+    <string name="users">Users</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="logout">Logout</string>
+    <string name="user_name">Name</string>
+    <string name="discount">Discount</string>
+    <string name="discount_tag">%d%%</string>
+    <string name="mobile_no">Mobile No.</string>
+    <string name="my_profile">My Profile</string>
+    <string name="change_password">Update Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="retype_pass">Retype Password</string>
+    <string name="profile_updated">Profile Updated Successfully!</string>
+
+    <!-- Manager Dashboard -->
+    <string name="dashboard">Dashboard</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="zero">0</string>
+    <string name="total_orders">Total Orders</string>
+    <string name="total_earning">Total Earning</string>
+
+    <!-- Foods -->
+    <string name="foods">Foods</string>
+    <string name="food_name">Name</string>
+    <string name="description">Description</string>
+    <string name="price">Price</string>
+    <string name="image">Image</string>
+    <string name="select_image">Select Image</string>
+    <string name="food_available">Available</string>
+    <string name="food_deleted">Food Removed Successfully!</string>
+    <string name="food_updated">Food Updated Successfully!</string>
+
+    <!-- Orders -->
+    <string name="orders">Orders</string>
+    <string name="status">Status:</string>
+    <string name="cooking">Cooking</string>
+    <string name="pending">Pending</string>
+    <string name="completed">Completed</string>
+    <string name="canceled">Canceled</string>
+    <string name="ordered_on">Ordered on:</string>
+    <string name="date">Order Date</string>
+
+    <!-- Cart -->
+    <string name="item_count">Quantity: %d</string>
+    <string name="table_no">Table No.: %s</string>
+    <string name="note">Note</string>
+</resources>

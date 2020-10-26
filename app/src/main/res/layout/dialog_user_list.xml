@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/user_name"
+        app:layout_constraintEnd_toEndOf="@+id/textView20"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userDetailsName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/user_name"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView11"
+        app:layout_constraintTop_toTopOf="@+id/textView11" />
+
+    <TextView
+        android:id="@+id/textView20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/mobile_no"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userDetailsName" />
+
+    <TextView
+        android:id="@+id/userDetailsMobile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/mobile_no"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView20"
+        app:layout_constraintTop_toTopOf="@+id/textView20" />
+
+    <TextView
+        android:id="@+id/textView22"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:labelFor="@id/userDetailsDiscount"
+        android:text="@string/discount"
+        app:layout_constraintEnd_toEndOf="@+id/textView20"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+    <SeekBar
+        android:id="@+id/discountSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        android:max="100"
+        android:progress="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/userDetailsDiscount"
+        app:layout_constraintStart_toEndOf="@+id/textView22"
+        app:layout_constraintTop_toTopOf="@+id/textView22" />
+
+    <EditText
+        android:id="@+id/userDetailsDiscount"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:ems="10"
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:text="@string/zero"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/discountSeekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/discountSeekBar" />
+</androidx.constraintlayout.widget.ConstraintLayout>

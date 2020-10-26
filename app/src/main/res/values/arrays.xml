@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="order_status">
+        <item>PENDING</item>
+        <item>COOKING</item>
+        <item>CANCELED</item>
+        <item>COMPLETED</item>
+    </array>
+</resources>
