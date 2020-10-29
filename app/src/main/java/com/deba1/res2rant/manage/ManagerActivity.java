@@ -20,13 +20,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 
 public class ManagerActivity extends AppCompatActivity {
-    private String userName, userEmail;
     private NavigationView navView;
-    private TextView headerName, headerEmail;
-    private Toolbar toolbar;
     private DrawerLayout drawer;
-    private ActionBar actionBar;
-    private ActionBarDrawerToggle toggle;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
 
     @Override
@@ -35,21 +30,22 @@ public class ManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manager);
 
         navView = findViewById(R.id.nav_view);
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         drawer = findViewById(R.id.nav_drawer);
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
+        ActionBar actionBar = getSupportActionBar();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.open, R.string.close);
 
         // Nav Header
-        headerName = navView.getHeaderView(0).findViewById(R.id.nav_user_name);
-        headerEmail = navView.getHeaderView(0).findViewById(R.id.nav_user_sub);
-        userName = getIntent().getStringExtra("name");
-        userEmail = getIntent().getStringExtra("sub");
+        TextView headerName = navView.getHeaderView(0).findViewById(R.id.nav_user_name);
+        TextView headerEmail = navView.getHeaderView(0).findViewById(R.id.nav_user_sub);
+        String userName = getIntent().getStringExtra("name");
+        String userEmail = getIntent().getStringExtra("sub");
         headerName.setText(userName);
         headerEmail.setText(userEmail);
 
         // Action Bar
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         toggle.syncState();
 

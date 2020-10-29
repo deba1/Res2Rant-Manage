@@ -2,6 +2,7 @@
     <!-- Base -->
     <string name="app_name">Res2Rant Manage</string>
     <string name="edit">Edit</string>
+    <string name="add">Add</string>
     <string name="filer">Filter</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -36,6 +37,7 @@
     <string name="total_earning">Total Earning</string>
 
     <!-- Foods -->
+    <string name="add_food">Add New Food</string>
     <string name="foods">Foods</string>
     <string name="food_name">Name</string>
     <string name="description">Description</string>
@@ -45,6 +47,7 @@
     <string name="food_available">Available</string>
     <string name="food_deleted">Food Removed Successfully!</string>
     <string name="food_updated">Food Updated Successfully!</string>
+    <string name="food_added">Food Added Successfully!</string>
 
     <!-- Orders -->
     <string name="orders">Orders</string>
@@ -55,6 +58,8 @@
     <string name="canceled">Canceled</string>
     <string name="ordered_on">Ordered on:</string>
     <string name="date">Order Date</string>
+    <string name="order_update_success">Order Updated Successfully!</string>
+    <string name="order_update_fail">Order Update Failed!</string>
 
     <!-- Cart -->
     <string name="item_count">Quantity: %d</string>

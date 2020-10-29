@@ -5,11 +5,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deba1.res2rant.manage.R;
 import com.deba1.res2rant.manage.models.Order;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -23,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.ViewHolder> {
     private final List<Order> ordersFiltered;
     private final Fragment fragment;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public OrderListAdapter(List<Order> allOrders, Fragment fragment) {
         this.ordersFiltered = allOrders;
@@ -69,6 +75,7 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         builder.setCustomTitle(header);
         builder.setView(body);
         builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.edit, (dialogInterface, i) -> updateOrder(order, spinner.getSelectedItem().toString()));
         builder.create().show();
     }
 
@@ -87,5 +94,15 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
             this.dateView = itemView.findViewById(R.id.order_item_date);
             this.statusView = itemView.findViewById(R.id.order_item_status);
         }
+    }
+
+    public void updateOrder(Order order, String status) {
+        order.status = status;
+
+        db.collection("orders")
+                .document(order.Id)
+                .set(order)
+                .addOnFailureListener(e -> Toast.makeText(fragment.getContext(), "Order Update Failed!\nCause: " + e.getMessage(), Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> Toast.makeText(fragment.getContext(), R.string.order_update_success, Toast.LENGTH_SHORT).show());
     }
 }

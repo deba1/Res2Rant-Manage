@@ -3,6 +3,7 @@ package com.deba1.res2rant.manage;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deba1.res2rant.manage.ui.chef.OrdersFragment;
 import com.google.android.material.navigation.NavigationView;
@@ -42,6 +43,7 @@ public class ChefActivity extends AppCompatActivity {
         headerEmail.setText(userEmail);
 
         // Action Bar
+        assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
         toggle.syncState();
 

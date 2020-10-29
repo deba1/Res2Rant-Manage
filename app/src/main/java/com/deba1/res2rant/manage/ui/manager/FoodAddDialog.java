@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.deba1.res2rant.manage.R;
 import com.deba1.res2rant.manage.models.Food;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,44 +27,32 @@ import androidx.fragment.app.DialogFragment;
 
 import static android.app.Activity.RESULT_OK;
 
-public class FoodDetailsDialog extends DialogFragment {
-    private final FoodListAdapter mAdapter;
+public class FoodAddDialog extends DialogFragment {
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private final StorageReference firebaseStorage = FirebaseStorage.getInstance().getReference();
 
     private ImageView foodImageView;
-    private final Drawable foodImage;
-    private final int SELECT_FOOD_IMAGE = 10011;
-    private Uri foodImageUri = null;
+    private final int SELECT_FOOD_IMAGE = 10012;
+    private Uri foodImageUri;
     private final Food food;
-    private final int position;
     private SubmitListener listener;
 
-    public FoodDetailsDialog(FoodListAdapter adapter, Food food, Drawable foodImage, int position) {
-        this.mAdapter = adapter;
-        this.food = food;
-        this.foodImage = foodImage;
-        this.position = position;
+    public FoodAddDialog() {
+        this.food = new Food();
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.edit);
-        View view1 = getLayoutInflater().inflate(R.layout.dialog_food_edit, null);
-        EditText fieldName = view1.findViewById(R.id.foodEditName);
-        EditText fieldDesc = view1.findViewById(R.id.foodEditDesc);
-        EditText fieldPrice = view1.findViewById(R.id.foodEditPrice);
-        foodImageView = view1.findViewById(R.id.foodEditPreview);
+        builder.setTitle(R.string.add_food);
+        View view1 = getLayoutInflater().inflate(R.layout.dialog_food_add, null);
+        EditText fieldName = view1.findViewById(R.id.foodAddName);
+        EditText fieldDesc = view1.findViewById(R.id.foodAddDesc);
+        EditText fieldPrice = view1.findViewById(R.id.foodAddPrice);
+        foodImageView = view1.findViewById(R.id.foodAddPreview);
         Button foodImageSelectButton = view1.findViewById(R.id.foodImageSelectButton);
-        SwitchCompat foodAvailable = view1.findViewById(R.id.foodEditAvailable);
-
-        fieldName.setText(food.name);
-        fieldDesc.setText(food.description);
-        fieldPrice.setText(String.valueOf(food.price));
-        foodImageView.setImageDrawable(foodImage);
-        foodAvailable.setChecked(food.available);
+        SwitchCompat foodAvailable = view1.findViewById(R.id.foodAddAvailable);
 
         foodImageSelectButton.setOnClickListener(view -> {
             Intent intent = new Intent();
@@ -73,29 +63,29 @@ public class FoodDetailsDialog extends DialogFragment {
         builder.setView(view1);
 
         builder.setNeutralButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss());
-        builder.setNegativeButton(R.string.delete, (dialogInterface, i) -> firebaseFirestore.collection("foods")
-                .document(food.id)
-                .delete()
-                .addOnSuccessListener(aVoid -> listener.onDeleteSuccess())
-                .addOnFailureListener(e -> listener.onDeleteFail(e)));
 
-        builder.setPositiveButton(R.string.edit, (dialogInterface, i) -> {
+        builder.setPositiveButton(R.string.add_food, (dialogInterface, i) -> {
             food.name = fieldName.getText().toString().trim();
             food.description = fieldDesc.getText().toString().trim();
             food.price = Float.parseFloat(fieldPrice.getText().toString().trim());
             food.available = foodAvailable.isChecked();
 
             firebaseFirestore.collection("foods")
-                    .document(food.id)
-                    .set(food)
-                    .addOnSuccessListener(aVoid -> {
+                    .add(food)
+                    .addOnSuccessListener(documentReference -> {
+                        food.id = documentReference.getId();
                         if (foodImageUri != null) {
                             firebaseStorage.child("foods/"+food.id)
                                     .putFile(foodImageUri)
-                                    .addOnSuccessListener(taskSnapshot -> listener.onOk(food))
+                                    .addOnSuccessListener(taskSnapshot -> {
+                                        food.id = documentReference.getId();
+                                        if (listener != null)
+                                            listener.onOk(food);
+                                    })
                                     .addOnFailureListener(e -> listener.onFail(e));
                         }
-                    });
+                    })
+            .addOnFailureListener(e -> listener.onFail(e));
         });
         return builder.create();
     }
@@ -115,8 +105,6 @@ public class FoodDetailsDialog extends DialogFragment {
 
     public interface SubmitListener {
         void onOk(Food food);
-        void onFail(Exception e);
-        void onDeleteSuccess();
-        void onDeleteFail(Exception e);
+        void onFail(Exception exception);
     }
 }

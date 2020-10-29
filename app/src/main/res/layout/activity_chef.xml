@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     tools:context=".ChefActivity">
 
-    <include layout="@layout/app_bar_main"
+    <include layout="@layout/app_bar_chef"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -1,19 +1,21 @@
 package com.deba1.res2rant.manage.ui.manager;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import com.deba1.res2rant.manage.R;
-import com.deba1.res2rant.manage.ui.manager.FoodListAdapter;
-import com.deba1.res2rant.manage.models.*;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.deba1.res2rant.manage.models.Food;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +28,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class FoodFragment extends Fragment {
     private RecyclerView foodListView;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FoodListAdapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private SearchView searchView;
     final List<Food> allFoods = new ArrayList<>();
+    private View mainView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View mainView = inflater.inflate(R.layout.fragment_foods, container, false);
-        foodListView = mainView.findViewById(R.id.foodListView);
+        mainView = inflater.inflate(R.layout.fragment_food_list, container, false);
+        foodListView = mainView.findViewById(R.id.foodListRecyclerView);
         foodListView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         foodListView.setLayoutManager(layoutManager);
-        searchView = mainView.findViewById(R.id.foodSearchView);
+        SearchView searchView = mainView.findViewById(R.id.foodListSearchView);
+        FloatingActionButton addButton = mainView.findViewById(R.id.foodListAddButton);
+        addButton.setOnClickListener(view -> onAddButtonClick(view));
 
         db.collection("foods")
                 .get()
@@ -49,7 +52,6 @@ public class FoodFragment extends Fragment {
                         allFoods.add(new Food(snapshot));
                     }
 
-                    mainView.findViewById(R.id.foodListLoading).setVisibility(View.GONE);
                     mAdapter = new FoodListAdapter(allFoods, FoodFragment.this);
                     foodListView.setAdapter(mAdapter);
                 });
@@ -78,15 +80,33 @@ public class FoodFragment extends Fragment {
     }
 
     public void updateFood() {
+        mainView.findViewById(R.id.foodListLoadingContainer).setVisibility(View.VISIBLE);
         db.collection("foods")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        allFoods.clear();
-                        for (DocumentSnapshot snapshot : queryDocumentSnapshots)
-                            allFoods.add(new Food(snapshot));
-                    }
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    allFoods.clear();
+                    for (DocumentSnapshot snapshot : queryDocumentSnapshots)
+                        allFoods.add(new Food(snapshot));
+                    mainView.findViewById(R.id.foodListLoadingContainer).setVisibility(View.GONE);
                 });
     }
+
+    public void onAddButtonClick(View view) {
+        FoodAddDialog dialog = new FoodAddDialog();
+        dialog.setSubmitListener(new FoodAddDialog.SubmitListener() {
+            @Override
+            public void onOk(Food food) {
+                allFoods.add(food);
+                mAdapter.notifyDataSetChanged();
+                Snackbar.make(view, R.string.food_added, BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFail(Exception exception) {
+                Snackbar.make(view, "Failed to add food!\nCause: " + exception.getMessage(), BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
+        dialog.show(getParentFragmentManager(), FoodFragment.class.getSimpleName());
+    }
+
 }
