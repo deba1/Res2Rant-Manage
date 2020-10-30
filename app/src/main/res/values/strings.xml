@@ -21,6 +21,7 @@
     <string name="discount">Discount</string>
     <string name="discount_tag">%d%%</string>
     <string name="mobile_no">Mobile No.</string>
+    <string name="mobile_no_placeholder">+8801XXXXXXXXX</string>
     <string name="my_profile">My Profile</string>
     <string name="change_password">Update Password</string>
     <string name="old_password">Old Password</string>
@@ -63,6 +64,7 @@
 
     <!-- Cart -->
     <string name="item_count">Quantity: %d</string>
-    <string name="table_no">Table No.: %s</string>
+    <string name="table_no_placeholder">Table No.: %s</string>
     <string name="note">Note</string>
+    <string name="table_no">Table No.:</string>
 </resources>

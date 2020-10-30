@@ -39,7 +39,7 @@
         android:id="@+id/cart_item_table"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/table_no"
+        android:text="@string/table_no_placeholder"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toEndOf="@+id/cart_item_count"

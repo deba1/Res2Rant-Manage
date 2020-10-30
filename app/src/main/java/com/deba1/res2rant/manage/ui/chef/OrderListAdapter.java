@@ -62,9 +62,14 @@ public class OrderListAdapter extends RecyclerView.Adapter<OrderListAdapter.View
         View header = View.inflate(fragment.getContext(), R.layout.dialog_order_header, null);
         TextView dateView = header.findViewById(R.id.orderHeaderDate);
         Spinner spinner = header.findViewById(R.id.orderHeaderStatus);
+        TextView mobileNoView = header.findViewById(R.id.orderMobileNo);
 
         dateView.setText(order.formatOrderTime());
         spinner.setSelection(order.getStatusIndex());
+        db.collection("users")
+                .document(order.userId)
+                .get()
+                .addOnSuccessListener(snapshot -> mobileNoView.setText(snapshot.getString("mobileNo")));
 
         View body = View.inflate(fragment.getContext(), R.layout.fragment_order_single, null);
         RecyclerView foodListView = body.findViewById(R.id.orderSingleList);
