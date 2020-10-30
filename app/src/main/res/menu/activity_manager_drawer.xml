@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_manager_foods"
             android:actionLayout="@layout/fragment_food_list"
-            android:icon="@drawable/ic_fastfood"
+            android:icon="@drawable/ic_fast_food"
             android:title="@string/foods" />
         <item
             android:id="@+id/nav_manager_users"

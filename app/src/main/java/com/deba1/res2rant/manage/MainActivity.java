@@ -19,24 +19,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
-        if (firebaseAuth.getCurrentUser() == null) {
-            new Handler().postDelayed(() -> startActivity(new Intent(MainActivity.this, LoginActivity.class)), 1500);
-            finish();
+        if (firebaseAuth.getUid() == null) {
+            new Handler().postDelayed(() -> {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }, 1500);
         }
         else {
             db.collection("users")
                     .document(firebaseAuth.getUid())
                     .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            User user = task.getResult().toObject(User.class);
-                            redirectToDashboard(user);
-                        }
-                        else {
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            intent.putExtra("error", task.getException().getMessage());
-                            startActivity(intent);
-                        }
+                    .addOnSuccessListener(snapshot -> {
+                        User user = snapshot.toObject(User.class);
+                        assert user != null;
+                        redirectToDashboard(user);
+                    })
+                    .addOnFailureListener(e -> {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.putExtra("error", e.getMessage());
+                        startActivity(intent);
                         finish();
                     });
         }

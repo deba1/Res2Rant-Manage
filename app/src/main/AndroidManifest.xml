@@ -3,7 +3,7 @@
     package="com.deba1.res2rant.manage">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -21,7 +21,8 @@
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
         <activity android:name=".ManagerActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
-
+        <activity android:name=".ChefActivity"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

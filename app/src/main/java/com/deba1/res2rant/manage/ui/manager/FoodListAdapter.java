@@ -1,21 +1,17 @@
 package com.deba1.res2rant.manage.ui.manager;
 
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deba1.res2rant.manage.R;
 import com.deba1.res2rant.manage.models.Food;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.io.ByteArrayInputStream;
@@ -23,16 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHolder> implements Filterable {
     private List<Food> foods;
     private List<Food> ogFoods;
-    private Fragment fragment;
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final Fragment fragment;
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     public Filter getFilter() {
@@ -86,9 +80,19 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
         notifyItemInserted(index);
     }
 
+    public void add(Food food) {
+        foods.add(food);
+        notifyItemInserted(foods.size()-1);
+    }
+
     public void remove(int index) {
         foods.remove(index);
         notifyItemRemoved(index);
+    }
+
+    public void update(int position, Food food) {
+        foods.set(position, food);
+        notifyItemChanged(position);
     }
 
     public FoodListAdapter(List<Food> foodList, Fragment manager) {
@@ -111,7 +115,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
         holder.foodItemDesc.setText(foods.get(position).description);
         holder.foodItemPrice.setText(String.format("৳ %s", foods.get(position).price));
 
-        storage.getReference(foods.get(position).imagePath)
+        storage.getReference("/foods/" + foods.get(position).id)
                 .getBytes(1048576)
                 .addOnSuccessListener(bytes -> {
                     ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
@@ -119,7 +123,8 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
                     holder.foodItemImage.setImageDrawable(image);
 
                     holder.layout.setOnClickListener(view -> displayAlert(foods.get(position), image, position));
-                });
+                })
+                .addOnFailureListener(e -> holder.layout.setOnClickListener(view -> displayAlert(foods.get(position), holder.foodItemImage.getDrawable(), position)));
     }
 
     @Override
@@ -128,7 +133,37 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
     }
 
     private void displayAlert(Food food, Drawable image, int position) {
-        DialogFragment dialog = new FoodDetailsDialog(this, food, image, position);
+        FoodDetailsDialog dialog = new FoodDetailsDialog(this, food, image, position);
+        dialog.setSubmitListener(new FoodDetailsDialog.SubmitListener() {
+            @Override
+            public void onOk(Food food1) {
+                foods.remove(food);
+                ogFoods.remove(food);
+                foods.add(food1);
+                ogFoods.add(food1);
+                notifyDataSetChanged();
+                Toast.makeText(fragment.getContext(), R.string.food_updated, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                Toast.makeText(fragment.getContext(), "Food update failed!\nCause: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeleteSuccess() {
+                foods.remove(food);
+                ogFoods.remove(food);
+                notifyDataSetChanged();
+                Toast.makeText(fragment.getContext(), R.string.food_deleted, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDeleteFail(Exception e) {
+                Toast.makeText(fragment.getContext(), "Food delete failed!\nCause: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
         dialog.show(fragment.getParentFragmentManager(), FoodListAdapter.class.getSimpleName());
     }
+
 }

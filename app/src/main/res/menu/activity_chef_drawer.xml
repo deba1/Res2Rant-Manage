@@ -4,7 +4,9 @@
     <group >
         <item
             android:id="@+id/menu_chef_orders"
-            android:icon="@drawable/ic_fastfood"
+            android:actionLayout="@layout/fragment_orders"
+            android:checked="true"
+            android:icon="@drawable/ic_fast_food"
             android:title="@string/orders" />
         <item
             android:id="@+id/menu_chef_logout"
